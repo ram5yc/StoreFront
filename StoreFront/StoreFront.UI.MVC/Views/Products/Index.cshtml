@@ -1,0 +1,69 @@
+﻿@model IEnumerable<StoreFront.DATA.EF.Product>
+
+@{
+    ViewBag.Title = "Products";
+}
+
+<h2>Products</h2>
+
+<p>
+@Html.ActionLink("Create New", "Create")
+</p>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UnitPrice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Blend.BlendName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductStatus.StatusName)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProductName)
+        </td>
+        <td>
+            <img src="~/Content/imgPictures/Products/t_@item.ProductImage" alt="Product Image" title="@item.ProductName" />
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UnitPrice)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Blend.BlendName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProductStatus.StatusName)
+        </td>
+        <td>
+        <td>
+            <a href="@Url.Action("Edit", "Products", new { id=item.ProductID })">
+                <i class="fa fa-pencil-square-o action-icons" aria-hidden="true"></i>
+            </a>
+            <a href="@Url.Action("Details", "Products", new { id = item.ProductID })">
+                <i class="fa fa-info-circle action-icons" aria-hidden="true"></i>
+            </a>
+            <a href="@Url.Action("Delete", "Products", new { id = item.ProductID })">
+                <i class="fa fa-trash-o action-icons" aria-hidden="true"></i>
+            </a>
+        </td>
+    </tr>
+    }
+
+</table>
