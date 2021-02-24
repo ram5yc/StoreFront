@@ -22,7 +22,7 @@ namespace StoreFront.DATA.EF
         public Nullable<int> BlendID { get; set; }
         public string Description { get; set; }
         public Nullable<int> ProductStatusID { get; set; }
-        public byte[] Image { get; set; }
+        public string Image { get; set; }
         public int CategoryID { get; set; }
     
         public virtual Blend Blend { get; set; }

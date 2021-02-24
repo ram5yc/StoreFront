@@ -7,6 +7,8 @@ using System.Web;
 using System.Web.Mvc;
 using StoreFront.DATA.EF;
 using StoreFront.UI.MVC.Utilities;
+using PagedList;
+using PagedList.Mvc;
 
 namespace StoreFront.UI.MVC.Controllers
 {
@@ -85,7 +87,7 @@ namespace StoreFront.UI.MVC.Controllers
                 }
                 //NO MATTER WHAT - add the imageName property of the book object to send to the DB.
 
-
+                product.Image = imgName;
                 #endregion
                 db.Products.Add(product);
                 db.SaveChanges();
