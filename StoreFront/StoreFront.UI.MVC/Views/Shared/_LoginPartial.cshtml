@@ -15,10 +15,10 @@
 }
 else
 {
-    <div class="nav navbar-nav navbar-right">
-        <div>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</div>
+    <div class="nav navbar-nav navbar-right" style="color:white">
+        <div>@Html.ActionLink("Join Now", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</div>
     </div>
     <div class="nav navbar-nav navbar-right">
-        <div>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</div>
+        <div>@Html.ActionLink("Sign In", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</div>
     </div>
 }

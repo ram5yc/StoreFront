@@ -26,20 +26,20 @@ namespace StoreFront.UI.MVC.Controllers
                                        .Include(p => p.Category);
             return View(products.ToList());
         }
-        public ActionResult ProductsQS(string searchFilter)
-        {
-            var products = ctx.Products;
-            if (string.IsNullOrEmpty(searchFilter))
-            {
-                return View(products.ToList());
-            }
-            else
-            {
-                var filteredProducts = products.Where(p => p.Category.ToLower().Contains(searchFilter.ToLower()));
+        //public ActionResult ProductsQS(string searchFilter)
+        //{
+        //    var products = ctx.Products;
+        //    if (string.IsNullOrEmpty(searchFilter))
+        //    {
+        //        return View(products.ToList());
+        //    }
+        //    else
+        //    {
+        //        var filteredProducts = products.Where(p => p.Category.ToLower().Contains(searchFilter.ToLower()));
 
-                return View(filteredProducts);
-            }
-        }
+        //        return View(filteredProducts);
+        //    }
+        //}
         /////////////////PAGING////////////////////
         public ActionResult ProductsMVCPaging(string searchCategory, int page = 1)
         {
@@ -48,14 +48,14 @@ namespace StoreFront.UI.MVC.Controllers
             //retrieve all products and order by name
             var products = ctx.Products.OrderBy(p => p.Category).ToList();
 
-            #region Search Logic
-            if (!string.IsNullOrEmpty(searchCategory))
-            {
-                products = products.Where(p => p.Category.ToLower().Contains(searchCategory.ToLower())).ToList(); //method syntax
-            }
+            //#region Search Logic
+            //if (!string.IsNullOrEmpty(searchCategory))
+            //{
+            //    products = products.Where(p => p.Category.ToLower().Contains(searchCategory.ToLower())).ToList(); //method syntax
+            //}
 
-            ViewBag.SearchCategory = searchCategory;
-            #endregion
+            //ViewBag.SearchCategory = searchCategory;
+            //#endregion
 
             //return using pagedlistmvc and the page number and size
             return View(products.ToPagedList(page, pageSize));
