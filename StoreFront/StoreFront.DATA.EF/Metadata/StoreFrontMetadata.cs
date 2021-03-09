@@ -103,7 +103,7 @@ namespace StoreFront.DATA.EF/*.Metadata*///commented out because it needs to mat
     #region ProductMetaData
     public class ProductMetaData
     {
-        [Display(Name = "Coffee")]
+        [Display(Name = "Product")]
         [StringLength(15, ErrorMessage = "* Value must be 15 characters or less")]
         public string ProductName { get; set; }
 
@@ -134,7 +134,7 @@ namespace StoreFront.DATA.EF/*.Metadata*///commented out because it needs to mat
         public Nullable<int> ProductStatusID { get; set; }
 
         [DisplayFormat(NullDisplayText = "[N/A]")]
-        public byte[] Image { get; set; }
+        public string Image { get; set; }
 
         //[Display(Name = "Status")]
         //public virtual ProductStatus ProductStatus { get; set; }

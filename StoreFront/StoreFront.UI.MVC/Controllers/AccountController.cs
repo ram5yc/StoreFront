@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using StoreFront.DATA.EF;
 
 namespace StoreFront.UI.MVC.Controllers
 {
@@ -140,11 +141,11 @@ namespace StoreFront.UI.MVC.Controllers
             return View();
         }
 
-        //
-        // POST: /Account/Register
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+
+       // POST: /Account/Register
+       [HttpPost]
+       [AllowAnonymous]
+       [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
@@ -153,13 +154,38 @@ namespace StoreFront.UI.MVC.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    //-------Custom User Registration-----------
+                    //By default there is no reference to the database in this controller (all other objects) are created using ViewModels).
+                    UserDetail newUserDetail = new UserDetail();
+
+
+
+
+                    //----if you were including a file upload, you would have to add it to the Register(RegisterViewModel) model, HttpPostedFileBase imgName)
+                    //process the file upload like always
+                    //then assign 
+                    //newUserDetail.Avatar = fileNameAfterProcessingUpload;
+
+                    //Save the userdetail object and persist to the database
+                    Store_FrontEntities ctx = new Store_FrontEntities();
+                    ctx.UserDetails.Add(newUserDetail); //sends to ef
+                    ctx.SaveChanges();//persists to the db
+
+                    //add every NEW REGISTERED user to a default role
+                    //Before testing, you must create the role (RolesAdmin in the website)
+                    UserManager.AddToRole(user.Id, "Customer");
+
+
+
+                    //THIS EMAIL CODE SHOULD BE REMOVED EVEN WITHOUT CUSTOM USER REGISTRATIONs
                     //var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     //await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
                     //ViewBag.Link = callbackUrl;
+                    //IF YOU ARe NOT VERIFYING EMAIL, CHANGE THE VIEW RETURN BELOW
                     //return View("DisplayEmail");
-                    UserManager.AddToRole(user.Id, "Customer");
-                    return RedirectToAction("Index", "Home");
+                    //once registered, they can login
+                    return View("Login");
                 }
                 AddErrors(result);
             }
@@ -167,6 +193,7 @@ namespace StoreFront.UI.MVC.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
+
 
         //
         // GET: /Account/ConfirmEmail

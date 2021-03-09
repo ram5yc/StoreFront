@@ -1,0 +1,73 @@
+﻿@*@model IEnumerable<StoreFront.UI.MVC.Models.CartItemViewModel>*@
+@model Dictionary<int, StoreFront.UI.MVC.Models.CartItemViewModel>
+@{
+    ViewBag.Title = "Shopping Cart";
+    decimal? cartTotal = 0;
+    int totalCountOfItems = 0;
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+@Html.ActionLink("Back to Shopping", "Index", "Products", null, new { @class = "btn btn-danger" })
+@if (ViewBag.Message != null)
+{
+    <h3 style="text-align: center; color: orange;">@ViewBag.Message</h3>
+}
+else
+{
+    <table class="table">
+        <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @* Model represents our dictionary, to get to specific values in the product portion of that collection, we need to access the Value property, then Product, then property to display *@
+                    <img src="~/Content/img/productImage/t_@item.Value.Product.Image" alt="product image" title="@item.Value.Product.ProductName" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Value.Product.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Value.Product.UnitPrice)
+                </td>
+                <td>
+                    @* Allow for a change to the qty in the cart index *@
+                    @using (Html.BeginForm("UpdateCart", "ShoppingCart", FormMethod.Post))
+                    {
+                        //pass the id of the product in this LINE item
+                        @Html.Hidden("productID", item.Value.Product.ProductID)
+                        @Html.Hidden("qty", item.Value.Qty, new { @class = "form-control", style = "max-width:75px;display:inline;" })
+
+                        <input type="submit" , value="Update Quantity" class="btn btn-primary" />
+
+                    }
+                    @{ totalCountOfItems += item.Value.Qty;}
+                </td>
+                <td>
+                    @* Calculate the line total and display in currency format *@
+                    @{
+                        decimal? lineTotal = item.Value.Product.UnitPrice * item.Value.Qty;
+                        //Update the cart total by summing the line total//
+                        cartTotal += lineTotal;
+                    }
+                    @string.Format($"{lineTotal:c}")
+                </td>
+
+                <td>
+                    @Html.ActionLink("Remove From Cart", "RemoveFromCart", new { id = item.Value.Product.ProductID })
+                </td>
+            </tr>
+        }
+    </table>
+    <p>
+        You have @totalCountOfItems @(totalCountOfItems > 1 ? "products" : "product") in your cart. Your total before taxes and shipping is @string.Format($"{cartTotal:c}")
+    </p>
+}

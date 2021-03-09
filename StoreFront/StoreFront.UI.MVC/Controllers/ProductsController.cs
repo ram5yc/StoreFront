@@ -9,6 +9,8 @@ using StoreFront.DATA.EF;
 using StoreFront.UI.MVC.Utilities;
 using PagedList;
 using PagedList.Mvc;
+using StoreFront.UI.MVC.Models; //for the add to cart method
+using System.Collections.Generic;
 
 namespace StoreFront.UI.MVC.Controllers
 {
@@ -16,11 +18,77 @@ namespace StoreFront.UI.MVC.Controllers
     {
         private Store_FrontEntities db = new Store_FrontEntities();
 
-        // GET: Products
-        public ActionResult Index()
+        #region AddToCart
+        [HttpPost]
+        public ActionResult AddToCart(int qty, int productID)
         {
-            var products = db.Products.Include(p => p.Blend).Include(p => p.Category).Include(p => p.ProductStatus);
-            return View(products.ToList());
+            //create empty version of LOCAL shopping cart
+            Dictionary<int, CartItemViewModel> shoppingCart = null;
+
+            //check the cart in session(global)
+            //if cart has stuff in it, assign its value to local dictionary
+            if(Session["cart"] != null)
+            {
+                //put global into local version
+                shoppingCart = (Dictionary<int, CartItemViewModel>)Session["cart"];
+            }
+            //if global version is empty
+            else
+            {
+                //create instance of local dictionary
+                shoppingCart = new Dictionary<int, CartItemViewModel>();
+            }
+            //get the product object being adding - firstOfDeault() alloes for null return
+            Product product = db.Products.Where(p => p.ProductID == productID).FirstOrDefault();
+
+            //if product is null - redirec to the index view
+            if (product == null)
+            {
+                return RedirectToAction("Index");
+            }
+            //product is valid
+            else
+            {
+                //create shoppingCartViewModel object
+                CartItemViewModel item = new CartItemViewModel(qty, product);
+                //if that productID already exists in the shopping cart, add to qty
+                if (shoppingCart.ContainsKey(product.ProductID))
+                {
+                    shoppingCart[product.ProductID].Qty += qty;
+                }
+                //if it is not in the cart - add it
+                else
+                {
+                    shoppingCart.Add(product.ProductID, item);
+                }
+                //update the global cart(session)
+                Session["cart"] = shoppingCart;
+            }
+            //as long as the product was added redirect user to the shoppingCart Index
+            return RedirectToAction("Index", "ShoppingCart");
+        }
+        #endregion
+
+        //GET: Products
+        public ActionResult Index(string searchCategory, int page = 1)
+        {
+            int pageSize = 5;
+
+            //retrieve all products and order by name
+            var products = db.Products.OrderBy(p => p.Category.CategoryName).ToList();
+
+            #region Search Logic
+            if (!string.IsNullOrEmpty(searchCategory))
+            {
+                //products = products.Where(p => p.Category == (searchCategory.ToLower()).ToList()); //method syntax
+                products = products.Where(p => p.Category.CategoryName.ToLower().Contains(searchCategory.ToLower())).ToList();
+            }
+
+            ViewBag.SearchCategory = searchCategory;
+            #endregion
+
+            //return using pagedlistmvc and the page number and size
+            return View(products.ToPagedList(page, pageSize));
         }
 
         // GET: Products/Details/5
@@ -52,53 +120,55 @@ namespace StoreFront.UI.MVC.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProductID,ProductName,UnitPrice,UnitsInStock,UnitsOnOrder,BlendID,Description,ProductStatusID,Image,CategoryID")] Product product, HttpPostedFileBase productPicture)
-        {
-            if (ModelState.IsValid)
-            {
-                #region File Upload
-                string imgName = "noImage.png";
+
+
+        //public ActionResult Create([Bind(Include = "ProductID,ProductName,UnitPrice,UnitsInStock,UnitsOnOrder,BlendID,Description,ProductStatusID,Image,CategoryID")] Product product, HttpPostedFileBase productPicture)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        #region File Upload
+        //        string imgName = "noImage.png";
                 
-                if (productPicture != null)
-                {
-                    imgName = productPicture.FileName;
+        //        if (productPicture != null)
+        //        {
+        //            imgName = productPicture.FileName;
                     
-                    string ext = imgName.Substring(imgName.LastIndexOf(".")); //ext.
+        //            string ext = imgName.Substring(imgName.LastIndexOf(".")); //ext.
 
-                    string[] goodExts = { ".jpg", ".jpeg", ".gif", ".png" };
+        //            string[] goodExts = { ".jpg", ".jpeg", ".gif", ".png" };
                     
-                    if (goodExts.Contains(ext.ToLower()) && productPicture.ContentLength <= 4194304)
+        //            if (goodExts.Contains(ext.ToLower()) && productPicture.ContentLength <= 4194304)
                     
-                    {
-                        imgName = Guid.NewGuid() + ext.ToLower();
+        //            {
+        //                imgName = Guid.NewGuid() + ext.ToLower();
 
-                        string savePath = Server.MapPath("~/Content/imgPictures/Products/");
-                        Image convertedImage = Image.FromStream(productPicture.InputStream);
-                        int maxImageSize = 500;
-                        int maxThumbSize = 100;
+        //                string savePath = Server.MapPath("~/Content/imgPictures/Products/");
+        //                Image convertedImage = Image.FromStream(productPicture.InputStream);
+        //                int maxImageSize = 500;
+        //                int maxThumbSize = 100;
 
-                        //call to imageService.ResizeImage
-                        Images.ResizeImage(savePath, imgName, convertedImage, maxImageSize, maxThumbSize);
-                    }
-                    else
-                    {
-                        imgName = "NoImage.png";
-                    }
-                }
-                //NO MATTER WHAT - add the imageName property of the book object to send to the DB.
+        //                //call to imageService.ResizeImage
+        //                Images.ResizeImage(savePath, imgName, convertedImage, maxImageSize, maxThumbSize);
+        //            }
+        //            else
+        //            {
+        //                imgName = "NoImage.png";
+        //            }
+        //        }
+        //        //NO MATTER WHAT - add the imageName property of the book object to send to the DB.
 
-                product.Image = imgName;
-                #endregion
-                db.Products.Add(product);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+        //        product.Image = imgName;
+        //        #endregion
+        //        db.Products.Add(product);
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
 
-            ViewBag.BlendID = new SelectList(db.Blends, "BlendID", "BlendName", product.BlendID);
-            ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName", product.CategoryID);
-            ViewBag.ProductStatusID = new SelectList(db.ProductStatuses, "ProductStatusID", "StatusName", product.ProductStatusID);
-            return View(product);
-        }
+        //    ViewBag.BlendID = new SelectList(db.Blends, "BlendID", "BlendName", product.BlendID);
+        //    ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName", product.CategoryID);
+        //    ViewBag.ProductStatusID = new SelectList(db.ProductStatuses, "ProductStatusID", "StatusName", product.ProductStatusID);
+        //    return View(product);
+        //}
 
         // GET: Products/Edit/5
         public ActionResult Edit(int? id)

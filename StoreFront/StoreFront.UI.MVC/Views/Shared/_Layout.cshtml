@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>ViewBag.Title</title>
+    <title>@ViewBag.Title</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -13,6 +13,10 @@
     <link rel="stylesheet" href="~/Content/css/templatemo.css">
     <link rel="stylesheet" href="~/Content/css/custom.css">
 
+
+    <!--FONT AWESOME LINK-->
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
     <!-- Load fonts style after rendering the layout styles -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
     <link rel="stylesheet" href="~/Content/css/fontawesome.min.css">
@@ -21,6 +25,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;1,300&family=Source+Sans+Pro:wght@700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+
+    <!-----------STYLING FOR MVC PAGING-------------->
+    <link href="~/Content/PagedList.css" rel="stylesheet" />
+
     <!--CUSTOM STYLE SHEET-->
     <link href="~/Content/CustomStyle.css" rel="stylesheet" />
     <!--
@@ -32,152 +40,50 @@
     -->
 </head>
 
+
 <body>
-    <header>
-        <!-- Header -->
-        <section>
-            <nav class="navbar navbar-expand-lg  main-navigation">
-                <img class="logo" src="~/Content/img/lavajavalogo.png" />
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse list" id="navbarNav">
-                    <ul class="navbar-nav" style="padding-bottom:2em">
-                        <li class="nav-item">
-                            <a class="nav-link navFont" href="@Url.Action("Index","Home")">Home<span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link navFont" href="@Url.Action("Index","Products")">Products</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link navFont" href="@Url.Action("Shop", "Home")">Shop</a>
-                        </li>
-                    </ul>
-                    <div class="modal fade bg-dark" id="templatemo_search" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg" role="document">
-                            <div class="w-100 pt-1 mb-5 text-right">
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <form action="" method="get" class="modal-content modal-body border-0 p-0">
-                                <div class="input-group mb-2">
-                                    <input type="text" class="form-control" id="inputModalSearch" name="q" placeholder="Search ...">
-                                    <button type="submit" class="input-group-text bg-success text-warning">
-                                        <i class="fa fa-fw fa-search text-white"></i>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    @* search bar is below *@
-                    <form class="form-inline ml-auto">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                    </form>
-                </div>
-            </nav>
-        </section>
+    <div class="menu">
+        <header>
+            <a href="@Url.Action("Index", "Home")"> <img class="logo" src="~/Content/img/lavajavalogo.png" /></a>
+        </header>
 
-        <!-- Close Header -->
-        <!-- Modal -->
+        <nav class="navbar">
+            <ul>
+                <li><a class="nav-link navFont" href="@Url.Action("Index","Home")">Home<span class="sr-only">(current)</span></a></li>
+                <li><a class="nav-link navFont" href="@Url.Action("Index", "Products")">Products</a></li>
+                <li>  <a class="nav-link navFont" href="@Url.Action("Index", "ShoppingCart")">Shop</a></li>
+            </ul>
+        </nav>
+    </div>
+    @if (Session["cart"] != null)
+    {<ul>
+            <li>
+                @{
+                    Dictionary<int, StoreFront.UI.MVC.Models.CartItemViewModel> prods = (Dictionary<int, StoreFront.UI.MVC.Models.CartItemViewModel>)Session["cart"];
+                    var prodCount = prods.Sum(p => p.Value.Qty);
+                }
+                <a href="@Url.Action("Index", "ShoppingCart")">
+                    <i class="fa fa-shopping-cart fa-lg"></i>
+                    <sup style="color:black;
+                                background-color:red;
+                                border-radius: 40%;
+                                display:inline-block;
+                                height: 1em;
+                                padding:1em;
+                                text-align:center">
 
-    </header>
+                        @prodCount
+                    </sup>
+                </a>
+            </li>
+        </ul>
+    }
 
 
-    @RenderBody()
-    <!-- End Featured Product -->
-    <!-- Start Footer -->
-    <footer class="bg-dark" id="tempaltemo_footer">
-        <div class="container">
-            <div class="row">
+     <div id="mainContent">
+         @RenderBody()
+     </div>
 
-                <div class="col-md-4 pt-5">
-                    <h2 class="h2 text-light border-bottom pb-3 border-light logo">Lava Java</h2>
-                    <ul class="list-unstyled text-light footer-link-list">
-                        <li>
-                            <i class="fas fa-map-marker-alt fa-fw"></i>
-                            5543 Pikes Peak Place, Seattle, WA
-                        </li>
-                        <li>
-                            <i class="fa fa-phone fa-fw"></i>
-                            <a class="text-decoration-none" href="tel:010-020-0340">123-456-7789</a>
-                        </li>
-                        <li>
-                            <i class="fa fa-envelope fa-fw"></i>
-                            <a class="text-decoration-none" href="mailto:info@coffeeco.com">info@coffeeco.com</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="col-md-4 pt-5">
-                    <h2 class="h2 text-light border-bottom pb-3 border-light">Products</h2>
-                    <ul class="list-unstyled text-light footer-link-list">
-                        <li><a class="text-decoration-none" href="#">Blends</a></li>
-                        <li><a class="text-decoration-none" href="#">Merchandise</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-md-4 pt-5">
-                    <h2 class="h2 text-light border-bottom pb-3 border-light">Further Info</h2>
-                    <ul class="list-unstyled text-light footer-link-list">
-                        <li><a class="text-decoration-none" href="#">Home</a></li>
-                        <li><a class="text-decoration-none" href="#">Blends</a></li>
-                        <li><a class="text-decoration-none" href="#">FAQs</a></li>
-                        <li><a class="text-decoration-none" href="#">Contact</a></li>
-                        @if (Request.IsAuthenticated && User.IsInRole("Admin"))
-                        {
-                            <li style="text-decoration:none">@Html.ActionLink("RolesAdmin", "Index", "RolesAdmin")</li>
-                            <li style="text-decoration:none">@Html.ActionLink("UsersAdmin", "Index", "UsersAdmin")</li>
-                        }
-                    </ul>
-                </div>
-
-            </div>
-
-            <div class="row text-light mb-4">
-                <div class="col-12 mb-3">
-                    <div class="w-100 my-3 border-top border-light"></div>
-                </div>
-                <div class="col-auto me-auto">
-                    <ul class="list-inline text-left footer-icons">
-                        <li class="list-inline-item border border-light rounded-circle text-center">
-                            <a class="text-light text-decoration-none" target="_blank" href="http://facebook.com/"><i class="fab fa-facebook-f fa-lg fa-fw"></i></a>
-                        </li>
-                        <li class="list-inline-item border border-light rounded-circle text-center">
-                            <a class="text-light text-decoration-none" target="_blank" href="https://www.instagram.com/"><i class="fab fa-instagram fa-lg fa-fw"></i></a>
-                        </li>
-                        <li class="list-inline-item border border-light rounded-circle text-center">
-                            <a class="text-light text-decoration-none" target="_blank" href="https://twitter.com/"><i class="fab fa-twitter fa-lg fa-fw"></i></a>
-                        </li>
-                        <li class="list-inline-item border border-light rounded-circle text-center">
-                            <a class="text-light text-decoration-none" target="_blank" href="https://www.linkedin.com/"><i class="fab fa-linkedin fa-lg fa-fw"></i></a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-auto">
-                    <label class="sr-only" for="subscribeEmail">Email address</label>
-                    <div class="input-group mb-2">
-                        <input type="text" class="form-control bg-dark border-light" id="subscribeEmail" placeholder="Email address">
-                        <div class="input-group-text btn-success text-light">Subscribe</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="w-100 bg-black py-3">
-            <div class="container">
-                <div class="row pt-2">
-                    <div class="col-12">
-                        <p class="text-left text-light">
-                            Copyright &copy; @DateTime.Now.Year
-                            | Designed by <a rel="sponsored" href="https://templatemo.com" target="_blank">TemplateMo</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </footer>
-    <!-- End Footer -->
     <!-- Start Script -->
     <script src="~/Content/js/jquery-1.11.0.min.js"></script>
     <script src="~/Content/js/jquery-migrate-1.2.1.min.js"></script>

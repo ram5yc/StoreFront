@@ -8,18 +8,19 @@
 }
 
 <h2>@ViewBag.Title</h2>
-
+<!--create additional css below-->
 @using (Html.BeginForm("ProductsMVCPaging", "Filters", FormMethod.Get))
 {
     ///////////Search form//////////////
-    <div class="row">
-        <div class="col-md-2 text-right" style="padding:.5em">
-            <label for="searchFilter">Find by Category:</label>
-        </div>
-        <div class="col-md-6 text-center">@Html.TextBox("SearchString", ViewBag.SearchString as string)</div>
-        <div class="col-md-2"><input type="submit" , value="Search" class="btn-success btn-warning" /></div>
-        <div class="col-md-2 text-center">@Html.ActionLink("Reset", "ProductsMVCPaging", "Filters", null, new { @class = "btn btn-danger" })</div>
+
+
+    <div class="col-md-2 text-right" style="padding:.5em">
+        <label for="searchFilter">Find by Category:</label>
     </div>
+    <div class="col-md-6">@Html.TextBox("SearchString", ViewBag.SearchString as string)</div>
+    <div class="col-md-2 text-center"><input type="submit" , value="Search" class="btn-success btn-warning" /></div>
+    <div class="col-md-2 text-center">@Html.ActionLink("Reset", "ProductsMVCPaging", "Filters", null, new { @class = "btn btn-danger" })</div>
+
 }
 
 <table class="table">
@@ -37,14 +38,16 @@
         <th>
             @Html.DisplayNameFor(model => model.FirstOrDefault().Category.CategoryName)
         </th>
-        <th></th>
+
     </tr>
 
     @foreach (var item in Model)
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.ProductName)
+                @*@Html.DisplayFor(modelItem => item.ProductName)*@
+
+                @Html.ActionLink(item.ProductName, "Details", "Products", new { id = item.ProductID }, null) 
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.UnitPrice)
@@ -67,8 +70,9 @@
 
 <hr style="border:2px solid darkgray" />
 <!--Will display the page # out of how many-->
-Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+        of @Model.PageCount
 
-<!--Pager - shows current page and links to other pages(PagedList) w/o search functionality - updates pager to receive Search Value--->
-@Html.PagedListPager(Model, page => Url.Action("ProductsMVCPaging", new { page }))
-
+        <!--Pager - shows current page and links to other pages(PagedList) w/o search functionality - updates pager to receive Search Value--->
+        @Html.PagedListPager(Model, page => Url.Action("ProductsMVCPaging", new { page, searchCategory = ViewBag.SearchCategory }))
+ 

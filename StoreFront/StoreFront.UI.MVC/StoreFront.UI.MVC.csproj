@@ -181,12 +181,14 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\RolesAdminController.cs" />
+    <Compile Include="Controllers\ShoppingCartController.cs" />
     <Compile Include="Controllers\UserAdminController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AdminViewModel.cs" />
+    <Compile Include="Models\CartItemViewModel.cs" />
     <Compile Include="Models\ContactViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -209,8 +211,11 @@
     <Content Include="Content\img\ajax-loader.gif" />
     <Content Include="Content\img\athena.jpg" />
     <Content Include="Content\img\bogeyman.jpg" />
-    <Content Include="Content\img\coffee.png" />
-    <Content Include="Content\img\coffeebeans.jpg" />
+    <Content Include="Content\img\coffe-image.jpeg" />
+    <Content Include="Content\img\Coffee-Cup-PNG-HD.png" />
+    <Content Include="Content\img\coffeebeans.png" />
+    <Content Include="Content\img\coffeecup.png" />
+    <Content Include="Content\img\coffeeheart.png" />
     <Content Include="Content\img\favicon.ico" />
     <Content Include="Content\img\lavajavalogo.png" />
     <Content Include="Content\img\medusa.png" />
@@ -402,10 +407,12 @@
     <Content Include="Views\Categories\Edit.cshtml" />
     <Content Include="Views\Categories\Index.cshtml" />
     <Content Include="Views\Filters\ProductsMVCPaging.cshtml" />
+    <Content Include="Views\ShoppingCart\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\imgPictures\Products\" />
+    <Folder Include="Content\img\productImage\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

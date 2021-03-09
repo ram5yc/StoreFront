@@ -15,6 +15,7 @@
         <AssociationConnector Association="Model.FK_Products_Categories" ManuallyRouted="false" />
         <AssociationConnector Association="Model.FK_Employees_Departments" ManuallyRouted="false" />
         <AssociationConnector Association="Model.FK_Products_ProductStatuses" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="Model.UserDetail" Width="1.5" PointX="8" PointY="5.25" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

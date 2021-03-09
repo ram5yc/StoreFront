@@ -2,77 +2,79 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="modal fade bg-white" id="templatemo_search" tabindex="-1" role="dialog" aria-labelledby="examplemodallabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="w-100 pt-1 mb-5 text-right">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
-        </div>
-        <form action="" method="get" class="modal-content modal-body border-0 p-0">
-            <div class="input-group mb-2">
-                <input type="text" class="form-control" id="inputmodalsearch" name="q" placeholder="search ...">
-                <button type="submit" class="input-group-text bg-success text-light">
-                    <i class="fa fa-fw fa-search text-white"></i>
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
 
 
+<section>
+    <section id="hero" class="d-flex flex-column justify-content-center align-items-center">
+        <div class="hero-container" data-aos="fade-in">
+            <h1>New Merchandise Has Arrived!</h1>
+            <button>Shop Now</button>
 
-<!-- start banner hero -->
-<div class="container learnMore">
-    <h7>
-        We work hard at what we do and we plan to keep the well-being of our customers and stakeholders first.<br />
-        Learn more about what we are doing.
-    </h7>
-</div>
-<div class="container monthlyBlends two-column-div">
-    <h8>
-        Take a look at our other products! We hand craft new blends monthly so check back with us.
-    </h8>
-    <section class="container py-5">
-        <div class="row">
-            <div class="col-12 col-md-3 p-5 mt-3">
-                <a href="#"><img src="~/Content/img/athena.jpg" class="rounded-circle img-fluid2 border trPic"></a>
-                <h5 class="text-center mt-3 mb-3">Athena</h5>
-                <p class="text-center"><a class="btn btn-success">go shop</a></p>
-            </div>
-            <div class="col-12 col-md-3 p-5 mt-3">
-                <a href="#"><img src="~/Content/img/bogeyman.jpg" class="rounded-circle img-fluid2 border trPic"></a>
-                <h2 class="h5 text-center mt-3 mb-3">Bogeyman</h2>
-                <p class="text-center"><a class="btn btn-success">go shop</a></p>
-            </div>
-            <div class="col-12 col-md-3 p-5 mt-3">
-                <a href="#"><img src="~/Content/img/zeus.jpg" class="rounded-circle img-fluid2 border"></a>
-                <h2 class="h5 text-center mt-3 mb-3">Zeus</h2>
-                <p class="text-center"><a class="btn btn-success">go shop</a></p>
-            </div>
-            <div class="col-12 col-md-3 p-5 mt-3">
-                <a href="#"><img src="~/Content/img/medusa.png" class="rounded-circle img-fluid2 border"></a>
-                <h5 class="text-center mt-3 mb-3">Medusa</h5>
-                <p class="text-center"><a class="btn btn-success">go shop</a></p>
-            </div>
         </div>
     </section>
-</div>
+    <div class="container monthlyBlends">
+        <div class="row">
+            <div class="col-md-4">
+                <h6>
+                    Take a look at our other products! We hand craft new blends monthly so check back with us.
+                </h6>
+            </div>
+
+            <div class="col-md-2">
+                <a href="#"><img src="~/Content/img/athena.jpg" class="rounded-circle img-fluid2 border trPic"></a>
+                <h5 class="text-center mt-3 mb-3">Athena</h5>
+                <p class="text-center"><a href="@Url.Action("Index", "Products")" class="btn btn-primary">go shop</a></p>
+            </div>
+            <div class="col-md-2">
+                <a href="#"><img src="~/Content/img/bogeyman.jpg" class="rounded-circle img-fluid2 border trPic"></a>
+                <h2 class="h5 text-center mt-3 mb-3">Bogeyman</h2>
+                <p class="text-center"><a href="@Url.Action("Index", "Products")" class="btn btn-primary">go shop</a></p>
+            </div>
+            <div class="col-md-2">
+                <a href="#"><img src="~/Content/img/zeus.jpg" class="rounded-circle img-fluid2 border trPic"></a>
+                <h2 class="h5 text-center mt-3 mb-3">Zeus</h2>
+                <p class="text-center"><a href="@Url.Action("Index", "Products")" class="btn btn-primary">go shop</a></p>
+            </div>
+            <div class="col-md-2">
+                <a href="#"><img src="~/Content/img/medusa.png" class="rounded-circle img-fluid2 border trPic"></a>
+                <h5 class="text-center mt-3 mb-3">Medusa</h5>
+                <p class="text-center"><a href="@Url.Action("Index", "Products")" class="btn btn-primary">go shop</a></p>
+            </div>
+
+
+        </div>
+
+    </div>
+</section>
+
+
 <div class="midSection">
-    <h8>Make Time For Yourself Today</h8>
+    <h8>Take Time For Yourself Today, the Java Way!</h8>
 </div>
 <div class="bottomSections container">
-    <h8> Now for a limited time, you can find two incredible Lava Java offerings: Deep Hazelnut and Frothy French Vanilla. Each of the blends offering a unique taste.</h8>
-    <div>
-
+    <div class="row">
+        <div class="col-md-10"><p style="margin: 4em;"> Now for a limited time, you can find two incredible Lava Java offerings: Deep Hazelnut and Frothy French Vanilla. Each of the blends offering a unique taste.</p></div>
+        <div class="col-md-4" style="margin: 2em;">
+            <img style="width:10em; height:12em; margin:1em;" src="~/Content/img/coffeecup.png" />
+        </div>
+        <div class="col-md-2" style="margin: 2em;">
+            <img style="width:10em; height:12em;" src="~/Content/img/coffeebeans.png" />
+        </div>
     </div>
 </div>
 <div class="bottomSections container">
-    <h8> Now for a limited time, you can find two incredible Lava Java offerings: Deep Hazelnut and Frothy French Vanilla. Each of the blends offering a unique taste.</h8>
-    <div>
-
+    <div class="row">
+        <div class="col-md-6" style="margin: 4em;">
+            <img style="width:12em; height:12em; margin:1em;" src="~/Content/img/coffeeheart.png" />
+        </div>
+        <div class="col-md-8"><p style="margin: 2em"> Now for a limited time, you can find two incredible Lava Java offerings: Deep Hazelnut and Frothy French Vanilla. Each of the blends offering a unique taste.</p></div>
     </div>
 </div>
 <div class="bottomSections container">
-    <h8>Stop by for a morning treat with selections hand crafted by our team.</h8>
+    <p style="margin: 4em;">Stop by for a morning treat with selections hand crafted by our team.</p>
+    <div class="col-md-10">
+        <img style="width:10em; height:13em; margin:1em;" src="~/Content/img/Coffee-Cup-PNG-HD.png" />
+    </div>
     <div>
 
     </div>

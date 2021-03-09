@@ -82,6 +82,18 @@
             @Html.DisplayFor(model => model.ProductStatus.StatusName)
         </dd>
 
+        <dt><label>Quantity: </label></dt>
+        <dd>
+            @using (Html.BeginForm("AddToCart", "Products", new { productID = Model.ProductID}, FormMethod.Post))
+            {
+               @*//use a hiddenFor() to pass the ProductID*@
+                @Html.HiddenFor( x => x.ProductID)
+
+                @Html.TextBox("Qty", 1, new { @class = "form=control", style="max-width:75px; display:inline;"})
+                //submit button
+                <input type="submit" value="Add To Cart" class="btn btn-primary" name="qty" />
+            }
+        </dd>
     </dl>
 </div>
 <div class="col-md-6">

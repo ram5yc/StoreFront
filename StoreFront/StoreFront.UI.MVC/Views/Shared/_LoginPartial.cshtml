@@ -1,4 +1,16 @@
 ﻿@using Microsoft.AspNet.Identity
+@using StoreFront.DATA.EF;
+
+@{ 
+
+    string currentUserId = User.Identity.GetUserId();
+    //retrieve the associated user details
+    Store_FrontEntities ctx = new Store_FrontEntities();
+    UserDetail ud = ctx.UserDetails.Where(u => u.UserID == currentUserId).FirstOrDefault(); //.Single() does NOT allow null values
+
+}
+
+@using Microsoft.AspNet.Identity
 @if (Request.IsAuthenticated)
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
