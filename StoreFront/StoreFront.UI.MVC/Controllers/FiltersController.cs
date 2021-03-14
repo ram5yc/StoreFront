@@ -47,7 +47,7 @@ namespace StoreFront.UI.MVC.Controllers
             }
         }
         /////////////////PAGING////////////////////
-        public ActionResult ProductsMVCPaging(string searchCategory, int page = 1)
+        public ActionResult Products(string searchCategory, int page = 1)
         {
             int pageSize = 5;
 

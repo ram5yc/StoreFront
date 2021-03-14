@@ -18,6 +18,72 @@ namespace StoreFront.UI.MVC.Controllers
     {
         private Store_FrontEntities db = new Store_FrontEntities();
 
+        #region Ajax Operations
+
+        #region Ajax Delete
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult AjaxDelete(int id)
+        {
+            //get prod from db
+            Product prod = db.Products.Find(id);
+            //remove prod from ef
+            db.Products.Remove(prod);
+
+            //save changes
+            db.SaveChanges();
+            //create message to send to user
+            var message = $"Deleted the following product from the database: {prod.ProductName}";
+
+            //return jsonresult
+            return Json(new
+            {
+                id = id,
+                message = message
+            });
+
+        }
+        #endregion
+        #endregion
+
+        #region Create
+        //add the publisher to the db via ajax and return the result
+        public JsonResult AjaxCreate(Product product)
+        {
+            //even though this is a json result the VIEW is a partial view
+            //so that we can render it in the Index (our div that we created)
+
+            //hard code that each publisher will b active( no checkbox in the form)
+
+            db.Products.Add(product);
+            db.SaveChanges();
+            return Json(product);
+        }
+        //
+        #endregion
+
+
+        #region Ajax Edit [GET]
+        public PartialViewResult ProductEdit(int id)
+        {
+            Product product = db.Products.Find(id);
+
+            return PartialView(product);
+        }
+
+        #endregion
+
+        #region Ajax Edit [POST]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult AjaxEdit(Product product)
+        {
+            db.Entry(product).State = EntityState.Modified; //how it updates with our changes
+            db.SaveChanges();
+            return Json(product);
+        }
+        #endregion
+
+
         #region AddToCart
         [HttpPost]
         public ActionResult AddToCart(int qty, int productID)
@@ -27,7 +93,7 @@ namespace StoreFront.UI.MVC.Controllers
 
             //check the cart in session(global)
             //if cart has stuff in it, assign its value to local dictionary
-            if(Session["cart"] != null)
+            if (Session["cart"] != null)
             {
                 //put global into local version
                 shoppingCart = (Dictionary<int, CartItemViewModel>)Session["cart"];
@@ -69,6 +135,11 @@ namespace StoreFront.UI.MVC.Controllers
         }
         #endregion
 
+        public ActionResult Tiles()
+        {
+            return View(db.Products.ToList());
+        }
+
         //GET: Products
         public ActionResult Index(string searchCategory, int page = 1)
         {
@@ -90,6 +161,7 @@ namespace StoreFront.UI.MVC.Controllers
             //return using pagedlistmvc and the page number and size
             return View(products.ToPagedList(page, pageSize));
         }
+
 
         // GET: Products/Details/5
         public ActionResult Details(int? id)
@@ -122,53 +194,55 @@ namespace StoreFront.UI.MVC.Controllers
         [ValidateAntiForgeryToken]
 
 
-        //public ActionResult Create([Bind(Include = "ProductID,ProductName,UnitPrice,UnitsInStock,UnitsOnOrder,BlendID,Description,ProductStatusID,Image,CategoryID")] Product product, HttpPostedFileBase productPicture)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        #region File Upload
-        //        string imgName = "noImage.png";
-                
-        //        if (productPicture != null)
-        //        {
-        //            imgName = productPicture.FileName;
-                    
-        //            string ext = imgName.Substring(imgName.LastIndexOf(".")); //ext.
+        public ActionResult Create([Bind(Include = "ProductID,ProductName,UnitPrice,UnitsInStock,UnitsOnOrder,BlendID,Description,ProductStatusID,Image,CategoryID")] Product product, HttpPostedFileBase image)
+        {
+            if (ModelState.IsValid)
+            {
+                #region File Upload
+                string imgName = "no image.png";
 
-        //            string[] goodExts = { ".jpg", ".jpeg", ".gif", ".png" };
-                    
-        //            if (goodExts.Contains(ext.ToLower()) && productPicture.ContentLength <= 4194304)
-                    
-        //            {
-        //                imgName = Guid.NewGuid() + ext.ToLower();
+                if (image != null)
+                {
+                    imgName = image.FileName;
 
-        //                string savePath = Server.MapPath("~/Content/imgPictures/Products/");
-        //                Image convertedImage = Image.FromStream(productPicture.InputStream);
-        //                int maxImageSize = 500;
-        //                int maxThumbSize = 100;
+                    string ext = imgName.Substring(imgName.LastIndexOf(".")); //ext.
 
-        //                //call to imageService.ResizeImage
-        //                Images.ResizeImage(savePath, imgName, convertedImage, maxImageSize, maxThumbSize);
-        //            }
-        //            else
-        //            {
-        //                imgName = "NoImage.png";
-        //            }
-        //        }
-        //        //NO MATTER WHAT - add the imageName property of the book object to send to the DB.
+                    string[] goodExts = { ".jpg", ".jpeg", ".gif", ".png" };
 
-        //        product.Image = imgName;
-        //        #endregion
-        //        db.Products.Add(product);
-        //        db.SaveChanges();
-        //        return RedirectToAction("Index");
-        //    }
+                    if (goodExts.Contains(ext.ToLower()) && (image.ContentLength <= 4194304))
 
-        //    ViewBag.BlendID = new SelectList(db.Blends, "BlendID", "BlendName", product.BlendID);
-        //    ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName", product.CategoryID);
-        //    ViewBag.ProductStatusID = new SelectList(db.ProductStatuses, "ProductStatusID", "StatusName", product.ProductStatusID);
-        //    return View(product);
-        //}
+                    {
+                        imgName = Guid.NewGuid() + ext.ToLower();
+
+                        string savePath = Server.MapPath("~/Content/img/productImage/");
+
+                        Image convertedImage = Image.FromStream(image.InputStream); //from Image.cs in Utilities folder
+
+                        int maxImageSize = 500;
+                        int maxThumbSize = 100;
+
+                        //call to imageService.ResizeImage
+                        Images.ResizeImage(savePath, imgName, convertedImage, maxImageSize, maxThumbSize);
+                    }
+                    else
+                    {
+                        imgName = "no image.png";
+                    }
+                }
+                //NO MATTER WHAT - add the imageName property of the book object to send to the DB.
+
+                product.Image = imgName;
+                #endregion
+                db.Products.Add(product);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.ProductID = new SelectList(db.Blends, "ProductID", "ProductName", product.ProductID);
+            ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName", product.CategoryID);
+            ViewBag.ProductStatusID = new SelectList(db.ProductStatuses, "ProductStatusID", "StatusName", product.ProductStatusID);
+            return View(product);
+        }
 
         // GET: Products/Edit/5
         public ActionResult Edit(int? id)
@@ -193,10 +267,38 @@ namespace StoreFront.UI.MVC.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProductID,ProductName,UnitPrice,UnitsInStock,UnitsOnOrder,BlendID,Description,ProductStatusID,Image,CategoryID")] Product product)
+        public ActionResult Edit([Bind(Include = "ProductID,ProductName,UnitPrice,UnitsInStock,UnitsOnOrder,BlendID,Description,ProductStatusID,Image,CategoryID")] Product product, HttpPostedFileBase image)
         {
             if (ModelState.IsValid)
             {
+                #region File Upload
+                if (image != null)
+                {
+                    string imgName = image.FileName;
+
+                    string ext = imgName.Substring(imgName.LastIndexOf('.'));
+
+                    string[] goodExts = { ".jpeg", ".jpg", ".gif", ".png" };
+
+                    if (goodExts.Contains(ext.ToLower()) && (image.ContentLength <= 4194304)) //4mb max by ASP.NET
+                    {
+                        imgName = Guid.NewGuid() + ext;
+                        string savePath = Server.MapPath("~/Content/img/productImage/");
+
+                        Image convertedImage = Image.FromStream(image.InputStream);
+                        int maxImageSize = 500;
+                        int maxThumbSize = 100;
+
+                        Images.ResizeImage(savePath, imgName, convertedImage, maxImageSize, maxThumbSize);
+
+                        if (product.Image != null && product.Image != "no image.png")
+                        {
+                            System.IO.File.Delete(Server.MapPath("~/Content/img/productImage/" + Session["currentImage"].ToString()));
+                        }
+                        product.Image = imgName;
+                    }
+                }
+                #endregion
                 db.Entry(product).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -206,7 +308,7 @@ namespace StoreFront.UI.MVC.Controllers
             ViewBag.ProductStatusID = new SelectList(db.ProductStatuses, "ProductStatusID", "StatusName", product.ProductStatusID);
             return View(product);
         }
-
+       
         // GET: Products/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -228,6 +330,10 @@ namespace StoreFront.UI.MVC.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Product product = db.Products.Find(id);
+            if (product.Image != null && product.Image != "no image.png")
+            {
+                System.IO.File.Delete(Server.MapPath("~/Content/img/productImage/" + Session["currentImage"].ToString()));
+            }
             db.Products.Remove(product);
             db.SaveChanges();
             return RedirectToAction("Index");

@@ -6,7 +6,7 @@
     string currentUserId = User.Identity.GetUserId();
     //retrieve the associated user details
     Store_FrontEntities ctx = new Store_FrontEntities();
-    UserDetail ud = ctx.UserDetails.Where(u => u.UserID == currentUserId).FirstOrDefault(); //.Single() does NOT allow null values
+    UserDetail ud = ctx.UserDetails.Where(u => u.ID == currentUserId).FirstOrDefault(); //.Single() does NOT allow null values
 
 }
 

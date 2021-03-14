@@ -219,6 +219,16 @@
     <Content Include="Content\img\favicon.ico" />
     <Content Include="Content\img\lavajavalogo.png" />
     <Content Include="Content\img\medusa.png" />
+    <Content Include="Content\img\productImage\Athena.jpg" />
+    <Content Include="Content\img\productImage\BigFoot.jpg" />
+    <Content Include="Content\img\productImage\Cookie.jfif" />
+    <Content Include="Content\img\productImage\VeggiePackWithHummus.jpg" />
+    <Content Include="Content\img\productImage\Medusa.png" />
+    <Content Include="Content\img\productImage\Milk.jpeg" />
+    <Content Include="Content\img\productImage\no image.jpg" />
+    <Content Include="Content\img\productImage\Pheonix.jpg" />
+    <Content Include="Content\img\productImage\LavaJava.JPG" />
+    <Content Include="Content\img\productImage\Zeus.jpg" />
     <Content Include="Content\img\woman 1.jpg" />
     <Content Include="Content\img\zeus.jpg" />
     <Content Include="Content\js\bootstrap.bundle.min.js" />
@@ -408,11 +418,13 @@
     <Content Include="Views\Categories\Index.cshtml" />
     <Content Include="Views\Filters\ProductsMVCPaging.cshtml" />
     <Content Include="Views\ShoppingCart\Index.cshtml" />
+    <Content Include="Views\Products\ProductDetails.cshtml" />
+    <Content Include="Views\Products\Tiles.cshtml" />
+    <Content Include="Views\Products\AjaxCreate.cshtml" />
+    <Content Include="Views\Products\ProductEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\imgPictures\Products\" />
-    <Folder Include="Content\img\productImage\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

@@ -1,0 +1,33 @@
+﻿@*@model StoreFront.DATA.EF.Product*@
+@model IEnumerable<StoreFront.DATA.EF.Product>
+
+@{
+    ViewBag.Title = "Tiles";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        @Html.ActionLink("Create New", "Create")
+    </div>
+    <div class="col-md-5 text-right">@Html.ActionLink("View Table", "Index")</div>
+</div>
+@foreach (var item in Model)
+{
+    <div class="pubTileContainer">
+        <p class="text-center">
+            @Html.ActionLink(item.ProductName, "Details", new { id = item.ProductID })
+        </p>
+        <p class="text-center">
+            @Html.DisplayNameFor(modelitem => UnitPrice)
+            @Html.DisplayNameFor(modelitem => UnitsInStock)
+        </p>
+        <p class="pubTileFooterLeft">
+            @Html.ActionLink("Delete", "Delete", new { id = item.ProductID })
+        </p>
+        <p class="pubTileFooterRight">
+            @Html.ActionLink("Edit", "Edit", new { id = item.ProductID })
+        </p>
+    </div>
+}

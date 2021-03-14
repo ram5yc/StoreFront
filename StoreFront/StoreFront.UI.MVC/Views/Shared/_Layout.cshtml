@@ -26,6 +26,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
 
+    <!----------styles------>
+
+    @* ADDED jQueryUI CSS CDN - note: themenames are swappable.*@
+    @*NOTE, Module 5 AJAX: find names at jqueryui.com/themeroller, gallyery tab (like excite-bike, south-street or sunny)*@
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/south-street/jquery-ui.css">
+
     <!-----------STYLING FOR MVC PAGING-------------->
     <link href="~/Content/PagedList.css" rel="stylesheet" />
 
@@ -52,7 +58,14 @@
                 <li><a class="nav-link navFont" href="@Url.Action("Index","Home")">Home<span class="sr-only">(current)</span></a></li>
                 <li><a class="nav-link navFont" href="@Url.Action("Index", "Products")">Products</a></li>
                 <li>  <a class="nav-link navFont" href="@Url.Action("Index", "ShoppingCart")">Shop</a></li>
+
+                @if (Request.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <li>@Html.ActionLink("RolesAdmin", "Index", "RolesAdmin")</li>
+                    <li>@Html.ActionLink("UsersAdmin", "Index", "UsersAdmin")</li>
+                }
             </ul>
+            @Html.Partial("_LoginPartial")
         </nav>
     </div>
     @if (Session["cart"] != null)
@@ -80,9 +93,9 @@
     }
 
 
-     <div id="mainContent">
-         @RenderBody()
-     </div>
+    <div id="mainContent">
+        @RenderBody()
+    </div>
 
     <!-- Start Script -->
     <script src="~/Content/js/jquery-1.11.0.min.js"></script>
@@ -90,6 +103,14 @@
     <script src="~/Content/js/bootstrap.bundle.min.js"></script>
     <script src="~/Content/js/templatemo.js"></script>
     <script src="~/Content/js/custom.js"></script>
+
+    <!------------scripts-------------->
+
+    <!--ADDEDjQuery UI CDN-->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <!-- ADDED jQuery Ajax CDN-->
+    <script src="https://cdn.jsdelivr.net/jquery.ajax.unobtrusive/3.2.4/jquery.unobtrusive-ajax.min.js"></script>
     @RenderSection("scripts", required: false)
     <!-- End Script -->
 </body>

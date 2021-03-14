@@ -1,66 +1,222 @@
-﻿@model IEnumerable<StoreFront.DATA.EF.Product>
+﻿
+@model PagedList.IPagedList<StoreFront.DATA.EF.Product>
+
+
+@using PagedList.Mvc;
+
 
 @{
     ViewBag.Title = "Products";
 }
 
-<h2 style="text-align:center; margin-top: 1em">Products</h2>
+<h2 style="text-align:center;margin-top:1em">@ViewBag.Title</h2>
 
-@if (User.IsInRole("Admin"))
+@using (Html.BeginForm("Index", "Products", FormMethod.Get))
 {
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>
+    <!--CREATE ADDITIONAL CSS BELOW-->
+
+    @*@if (User.IsInRole("Admin"))
+        {
+            <p>
+                @Html.ActionLink("Create New", "Create")
+            </p>
+        }*@
+
+    <div class="col-md-2 text-right" style="padding:.5em">
+        <label for="searchFilter">Find by Category:</label>
+    </div>
+
+    <div class="col-md-6">@Html.TextBox("SearchString", ViewBag.SearchString as string)</div>
+
+    <div class="col-md-2"><input type="submit" value="Search" class="btn btn-warning" /></div>
+    <div class="col-md-2">@Html.ActionLink("Reset", "ProductsMVCPaging", "Filters", null, new { @class = "btn btn-danger" })</div>
+
+
+    <div class="row">
+        <div class="col-md-10">
+            @*@Html.ActionLink("Create New", "Create")*@
+            <button id="toggleProductCreate" class="btn btn-primary" style="margin-bottom:1em;">Create Product</button>
+            <div id="ProductCreate">
+                <!--Render the partial view-->
+                @Html.Partial("AjaxCreate", new StoreFront.DATA.EF.Product())
+            </div>
+        </div>
+        <div class="col-md-2 text-right">    @Html.ActionLink("View Tiles", "Tiles")</div>
+    </div>
 }
-
-
-<table class="table">
+<table class="table" id="ProductTable">
     <tr>
+        <!--ADD FIRST OR DEFAULT TO retrieve the values-->
         <th>
-            @Html.DisplayNameFor(model => model.ProductName)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().ProductName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.UnitPrice)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().UnitPrice)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ProductStatus.StatusName)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Image)
         </th>
-
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Category)
+        </th>
+        <th></th>
 
     </tr>
 
+
     @foreach (var item in Model)
     {
-        <tr>
+        <tr id="Product-@item.ProductID">
+            <!--for unique ID-->
             <td>
-                @Html.DisplayFor(modelItem => item.ProductName)
-            </td>
-            <td>
-                <img src="~/Content/imgPictures/Products/t_@item.Image" alt="Product Image" title="@item.ProductName" />
+                @Html.ActionLink(item.ProductName, "Details", "Products", new { id = item.ProductID }, null)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.UnitPrice)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ProductStatus.StatusName)
+                @*@Html.DisplayFor(modelItem => item.Image)*@
+                <img src="~/Content/img/productImage/t_@item.Image" alt="Product" title="@item.ProductName" />
             </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryID)
+            </td>
+            <td>
+                <a href="" class="EditLink" id="@item.ProductID">Edit</a> |
+                <a href="" class="DetailsLink" id="@item.ProductID">Details</a> |
 
-            @if (User.IsInRole("Admin"))
-            {
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.ProductID }) | <!--can only delete a book if there is no book authors-->
-                    @if (item.ProductStatusID == 2)
-                    {
-                        @Html.ActionLink("Delete", "Delete", new { id = item.ProductID }, new { @class = "text-danger" })
-                    }
-                    else
-                    {
-                        <span class="text-danger">In Use</span>
-                    }
-                </td>
-            }
+                @*<a href="@Url.Action("Edit", "Products", new { id = item.ProductID })">
+                        @*<i class="fa fa-pencil-square-o action-icons" aria-hidden="true"></i>
+                    </a>*@
 
+                @*<a href="@Url.Action("Details", "Products", new { id = item.ProductID })">
+                        @*<i class="fa fa-info-circle action-icons" aria-hidden="true"></i>
+                    </a>*@
+                @*<a href="@Url.Action("Delete", "Products", new { id = item.ProductID })">
+                        @*<i class="fa fa-trash-o action-icons" aria-hidden="true"></i>
+                    </a>*@
+
+
+                @Ajax.ActionLink("Delete", "AjaxDelete", "Products", new { id = item.ProductID }, new AjaxOptions
+           {
+               HttpMethod = "POST",
+               Confirm = "Are you sure you want to delete " + item.ProductName + " from products?",
+               OnSuccess = "deleteConfirmed"
+           })
+            </td>
         </tr>
     }
 
 </table>
+<div id="ProductDetails">
+    <div id="ProductEdit"></div>
+</div>
+
+<hr style="border:2px solid darkgray" />
+<!--Will display the page # out of how many-->
+        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+        of @Model.PageCount
+
+        <!--Pager - shows current page and links to other pages(PagedList) w/o search functionality - updates pager to receive Search Value--->
+        @Html.PagedListPager(Model, page => Url.Action("ProductsMVCPaging", new { page, searchCategory = ViewBag.SearchCategory }))
+
+
+        @section scripts{
+
+            <script>
+   function deleteConfirmed(response) {
+                    var rowId = '#Product-' + response.id;
+                    $('#ProductsTable').find(rowId).remove();
+
+                    $('#MessageShown').html("<div class='alert alert-success'>" + response.message + "</div>");
+                    //check to make sure you have jQuery installed
+
+                }
+
+                $('a.DetailsLink').click(function (e) {
+                    e.preventDefault();
+                    $('#ProductDetails').data('pId', $(this).attr('id')).dialog({
+                        modal: true,
+                        open: function () {
+                            var data = $(this).data('pId');
+                            $(this).load('/Products/ProductDetails/' + data)
+                        },
+                        width: 400,
+                        height: 200,
+                        title: "Product Details",
+                        resizable: false
+                    });
+                });
+
+                $('#ProductCreate').hide();
+                $('#toggleProductCreate').click(function () {
+
+                    $('#ProductCreate').toggle();
+
+                    if ($('#ProductCreate').is(':visible')) {
+                        $('#toggleProductCreate').html('Cancel');
+                        $('#toggleProductCreate').attr('class', "btn btn-danger")
+                    }
+                    else {
+                        $('#toggleProductCreate').html('Create Product')
+                        $('#toggleProductCreate').attr('class', "btn btn-primary")
+                    }
+                });
+
+                $('#ProductCreateForm').submit(function (e) {
+                    var dataKept = $(this).serializeArray();
+                    e.preventDefault();
+                    $('#MessageShown').html("<div class='alert alert-info'>Please Wait...</div>");
+
+                    $
+                        ({
+                        url: "@Url.Action("AjaxCreate","Products")",
+                        type: "POST",
+                        data: dataKept,
+                        datatype: "json",
+                        success: function (data) {
+                            $('#MessageShown').html("<div class='alert alert-success'>Your record was added!</div>")
+                            $('#ProductCreateForm')[0].reset();
+
+
+                            $(function () {
+                                var row = '<tr><td>' + data.ProductName + '</td><td>' +
+                                    data.UnitPrice + '</td><td>' + data.UnitsInStock + '</td><td>' + data.Category + '</td><td>' + data.Description + '</td><td>Refresh to View Links</td></tr>';
+                                $('#ProductsTable').append(row);
+
+                                $('#ProductCreate').toggle();
+                                $('#toggleProductCreate').html('Create Product');
+                                $('#toggleProductCreate').attr('class', 'btn btn-primary');
+
+
+                            });
+                        },
+                        error: function (e) {
+                            $('#MessageShown').html("<div class='alert alert-warning'>There was an error." +
+                                " Please try again or contact the site administrator.</div>"
+                            );
+                        }
+                    });
+                });
+
+
+                $('a.EditLink').click(function (e) {
+                    e.preventDefault();
+                    $('#ProductEdit').data('pId', $(this).attr('id')).dialog
+                        ({
+
+                            modal: true,
+                            open: function () {
+                                var data = $(this).data('pId')
+                                $(this).load('/Products/ProductEdit/' + data);
+
+                            },
+                            width: 600,
+                            height: 440,
+                            title: 'Edit Product',
+                            resizable: false
+                        });
+                });
+            </script>
+
+        }

@@ -1,0 +1,98 @@
+﻿@model StoreFront.DATA.EF.Product
+
+
+@using (Html.BeginForm("", "", FormMethod.Post, new { id = "PublisherEditForm" }))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        @*<h4>Product</h4>
+        <hr />*@
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ProductID)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ProductName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UnitPrice, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-danger" })
+            </div>
+        </div>
+  
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Image, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Image, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CategoryID, "CategoryID", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("CategoryID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CategoryID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Update" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+    <script>
+    $('#ProductEdit').submit(function (e) {
+        e.preventDefault();
+        //serialize
+        var dataKept = $(this).serializeArray();
+        $('#MessageShown').html("<div class='alert alert-info'>Please wait while we update...</div>");
+
+        $.ajax({
+            url: "@Url.Action("AjaxEdit","Products")",
+            type: "POST",
+            data: dataKept,
+            datatype: "json",
+            success: function (data) {
+                //message to user
+                $('#MessageShown').html(
+                    "<div class= 'alert alert-success'>Your update has been recorded!</div>");
+
+                $('#ProductEditForm')[0].reset();
+                $(function () {
+                    var row = `<tr><td>${data.ProductName}</td><td>${data.UnitPrice}</td><td>${data.UnitsInStock}</td><td>${data.Category}</td><td>${data.Description}</td>
+                           <td>Refresh to View Links</td></tr>`
+                    //update row
+                    $("#Product-" + data.ProductID).replaceWith(row)
+                });
+                $('#ProductEdit').dialog('close');
+            },
+            error: function (e) {
+                ('#MessageShown').html("<div class='alert alert-warning'>There was an error" + " Please try again or contact the site administrator.");
+            }
+        });
+    });
+
+    </script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -219,3 +219,25 @@ nav ul {
     width: 95%;
     margin: auto;
 }
+.pubTileContainer {
+    height: 150px;
+    margin: .5em;
+    width: 30%;
+    float: left;
+    border: solid orange 2px;
+    box-shadow: 5px 5px darkgray;
+    /*to absolute position child elements, you MUST declare the poition relative in the parent container*/
+    position: relative;
+}
+
+.pubTileFooterLeft {
+    position: absolute;
+    bottom: .5em;
+    left: .5em;
+}
+
+.pubTileFooterRight {
+    position: absolute;
+    bottom: .5em;
+    right: .5em;
+}
