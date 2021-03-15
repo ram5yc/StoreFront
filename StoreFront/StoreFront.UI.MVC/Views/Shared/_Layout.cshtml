@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="apple-touch-icon" href="~/Content/img/apple-icon.png">
-    <link rel="shortcut icon" type="image/x-icon" href="~/Content/img/favicon.ico">
+    <link rel="shortcut icon" type="/x-icon" href="~/Content/img/favicon-16x16.png">
 
     <link rel="stylesheet" href="~/Content/css/bootstrap.min.css">
     <link rel="stylesheet" href="~/Content/css/templatemo.css">
@@ -27,7 +27,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
 
     <!----------styles------>
-
     @* ADDED jQueryUI CSS CDN - note: themenames are swappable.*@
     @*NOTE, Module 5 AJAX: find names at jqueryui.com/themeroller, gallyery tab (like excite-bike, south-street or sunny)*@
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/south-street/jquery-ui.css">
@@ -57,21 +56,22 @@
             <ul>
                 <li><a class="nav-link navFont" href="@Url.Action("Index","Home")">Home<span class="sr-only">(current)</span></a></li>
                 <li><a class="nav-link navFont" href="@Url.Action("Index", "Products")">Products</a></li>
-                <li>  <a class="nav-link navFont" href="@Url.Action("Index", "ShoppingCart")">Shopping Cart</a></li>  
+                <li>  <a class="nav-link navFont" href="@Url.Action("Index", "ShoppingCart")">Shopping Cart</a></li>
                 <li>  <a class="nav-link navFont" href="@Url.Action("Contact", "Home")">Contact Us</a></li>
-                <li class="nav-item dropdown">
-                    @*<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Register/Log In</a>
-                    <div class="dropdown-menu account-dropdown" style="background-color: lightgray;">*@
+                <li class="nav-item dropdown navFont">
+                    @*<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Account</a>
+                    <div class="dropdown-menu account-dropdown navFont" style="background-color: lightgray;">*@
                         @Html.Partial("_LoginPartial")
-                    </div>
+                    @*</div>*@
                 </li>
+
                 @if (Request.IsAuthenticated && User.IsInRole("Admin"))
                 {
                     <li>@Html.ActionLink("RolesAdmin", "Index", "RolesAdmin")</li>
                     <li>@Html.ActionLink("UsersAdmin", "Index", "UsersAdmin")</li>
                 }
             </ul>
-            
+
         </nav>
     </div>
     @if (Session["cart"] != null)
@@ -111,12 +111,12 @@
     <script src="~/Content/js/custom.js"></script>
 
     <!------------scripts-------------->
-
     <!--ADDEDjQuery UI CDN-->
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <!-- ADDED jQuery Ajax CDN-->
     <script src="https://cdn.jsdelivr.net/jquery.ajax.unobtrusive/3.2.4/jquery.unobtrusive-ajax.min.js"></script>
+
     @RenderSection("scripts", required: false)
     <!-- End Script -->
 </body>

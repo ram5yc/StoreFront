@@ -1,5 +1,4 @@
-﻿
-@model PagedList.IPagedList<StoreFront.DATA.EF.Product>
+﻿@model PagedList.IPagedList<StoreFront.DATA.EF.Product>
 
 
 @using PagedList.Mvc;
@@ -9,10 +8,23 @@
     ViewBag.Title = "Products";
 }
 
-<h2 style="text-align:center;margin-top:1em">@ViewBag.Title</h2>
+<h2 style="text-align:center;margin-top:1em; color:#2b7e3c;">@ViewBag.Title</h2>
+
 
 @using (Html.BeginForm("Index", "Products", FormMethod.Get))
 {
+    <div class="col-md-2 text-right" style="padding-top:.5em">
+        <label for="searchFilter">Find by Category</label>
+    </div>
+    <div class="col-md-6">
+        @Html.TextBox("SearchString", ViewBag.SearchString as string)
+    </div>
+    <div class="col-md-2 text-center">
+        <input type="submit" value="Search", class="btn btn-primary"
+/>    </div>
+    <div class="col-md-2 text-center">
+        @Html.ActionLink("Reset", "ProductsMVCPaging","Filters", null, new { @class="btn btn-danger"})
+    </div>
     <!--CREATE ADDITIONAL CSS BELOW-->
 
     <div class="row">
@@ -27,6 +39,7 @@
         <div class="col-md-2 text-right">    @Html.ActionLink("View Tiles", "Tiles")</div>
     </div>
 }
+@Html.PagedListPager(Model, page=>Url.Action("ProductsMVCPaging", new {page, searchString = ViewBag.SearchString}))
 <table class="table" id="ProductTable">
     <tr>
         <!--ADD FIRST OR DEFAULT TO retrieve the values-->
@@ -40,7 +53,7 @@
             @Html.DisplayNameFor(model => model.FirstOrDefault().Image)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().Category)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Category.CategoryName)
         </th>
         <th></th>
 
@@ -106,7 +119,7 @@
         of @Model.PageCount
 
         <!--Pager - shows current page and links to other pages(PagedList) w/o search functionality - updates pager to receive Search Value--->
-        @Html.PagedListPager(Model, page => Url.Action("ProductsMVCPaging", new { page, searchCategory = ViewBag.SearchCategory }))
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, searchCategory = ViewBag.SearchCategory }))
 
 
         @section scripts{
