@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNet.Identity
 @using StoreFront.DATA.EF;
 
-@{ 
+@{
 
     string currentUserId = User.Identity.GetUserId();
     //retrieve the associated user details
@@ -27,10 +27,8 @@
 }
 else
 {
-    <div class="nav navbar-nav navbar-right" style="color:white">
-        <div>@Html.ActionLink("Join Now", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</div>
-    </div>
-    <div class="nav navbar-nav navbar-right">
-        <div>@Html.ActionLink("Sign In", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</div>
-    </div>
+    <ul class="nav navbar-nav">
+        <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
 }

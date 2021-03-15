@@ -57,15 +57,21 @@
             <ul>
                 <li><a class="nav-link navFont" href="@Url.Action("Index","Home")">Home<span class="sr-only">(current)</span></a></li>
                 <li><a class="nav-link navFont" href="@Url.Action("Index", "Products")">Products</a></li>
-                <li>  <a class="nav-link navFont" href="@Url.Action("Index", "ShoppingCart")">Shop</a></li>
-
+                <li>  <a class="nav-link navFont" href="@Url.Action("Index", "ShoppingCart")">Shopping Cart</a></li>  
+                <li>  <a class="nav-link navFont" href="@Url.Action("Contact", "Home")">Contact Us</a></li>
+                <li class="nav-item dropdown">
+                    @*<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Register/Log In</a>
+                    <div class="dropdown-menu account-dropdown" style="background-color: lightgray;">*@
+                        @Html.Partial("_LoginPartial")
+                    </div>
+                </li>
                 @if (Request.IsAuthenticated && User.IsInRole("Admin"))
                 {
                     <li>@Html.ActionLink("RolesAdmin", "Index", "RolesAdmin")</li>
                     <li>@Html.ActionLink("UsersAdmin", "Index", "UsersAdmin")</li>
                 }
             </ul>
-            @Html.Partial("_LoginPartial")
+            
         </nav>
     </div>
     @if (Session["cart"] != null)

@@ -15,23 +15,6 @@
 {
     <!--CREATE ADDITIONAL CSS BELOW-->
 
-    @*@if (User.IsInRole("Admin"))
-        {
-            <p>
-                @Html.ActionLink("Create New", "Create")
-            </p>
-        }*@
-
-    <div class="col-md-2 text-right" style="padding:.5em">
-        <label for="searchFilter">Find by Category:</label>
-    </div>
-
-    <div class="col-md-6">@Html.TextBox("SearchString", ViewBag.SearchString as string)</div>
-
-    <div class="col-md-2"><input type="submit" value="Search" class="btn btn-warning" /></div>
-    <div class="col-md-2">@Html.ActionLink("Reset", "ProductsMVCPaging", "Filters", null, new { @class = "btn btn-danger" })</div>
-
-
     <div class="row">
         <div class="col-md-10">
             @*@Html.ActionLink("Create New", "Create")*@
@@ -111,7 +94,12 @@
 <div id="ProductDetails">
     <div id="ProductEdit"></div>
 </div>
-
+@if (User.IsInRole("Admin"))
+{
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+}
 <hr style="border:2px solid darkgray" />
 <!--Will display the page # out of how many-->
         Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
@@ -157,7 +145,8 @@
                         $('#toggleProductCreate').html('Cancel');
                         $('#toggleProductCreate').attr('class', "btn btn-danger")
                     }
-                    else {
+                    else
+                    {
                         $('#toggleProductCreate').html('Create Product')
                         $('#toggleProductCreate').attr('class', "btn btn-primary")
                     }

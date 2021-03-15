@@ -1,7 +1,7 @@
 ﻿@model StoreFront.DATA.EF.Product
 
 
-@using (Html.BeginForm("", "", FormMethod.Post, new { id = "PublisherEditForm" }))
+@using (Html.BeginForm("", "", FormMethod.Post, new { id = "ProductEditForm" }))
 {
     @Html.AntiForgeryToken()
     
@@ -60,7 +60,7 @@
 }
 
     <script>
-    $('#ProductEdit').submit(function (e) {
+    $('#ProductEditForm').submit(function (e) {
         e.preventDefault();
         //serialize
         var dataKept = $(this).serializeArray();
